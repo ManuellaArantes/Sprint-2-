@@ -1,0 +1,1 @@
+CREATE DATABASE individual_morango;

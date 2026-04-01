@@ -8,7 +8,7 @@ const SERIAL_BAUD_RATE = 9600;
 const SERVIDOR_PORTA = 3300;
 
 // habilita ou desabilita a inserção de dados no banco de dados
-const HABILITAR_OPERACAO_INSERIR = false;
+const HABILITAR_OPERACAO_INSERIR = true;
 
 // função para comunicação serial
 const serial = async (
@@ -20,8 +20,8 @@ const serial = async (
         {
             host: 'localhost',
             user: 'user_insert',
-            password: 'SENHA_DO_BANCO',
-            database: 'DATABASE_DO_BANCO',
+            password: 'Urubu100@',
+            database: 'PI',
             port: 3306
         }
     ).promise();
@@ -50,7 +50,7 @@ const serial = async (
     arduino.pipe(new serialport.ReadlineParser({ delimiter: '\r\n' })).on('data', async (data) => {
         console.log(data);
         const valores = data.split(';');
-        const sensorGas = parseInt(valores[0]);
+        const sensorGas = parseFloat(valores[0]);
 
         // armazena os valores dos sensores nos arrays correspondentes
         valoresSensorGas.push(sensorGas);
@@ -60,8 +60,8 @@ const serial = async (
 
             // este insert irá inserir os dados na tabela "medida"
             await poolBancoDados.execute(
-                'INSERT INTO medida (sensorGas) VALUES (?, ?)',
-                [sensorAnalogico, sensorGas]
+                'INSERT INTO leituraGas (PPM) VALUES (?)',
+                [sensorGas]
             );
             console.log("valores inseridos no banco: ", sensorGas);
 
